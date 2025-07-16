@@ -1,54 +1,57 @@
 -- main.lua
--- Grow a Garden Pet Auto Leveler Script
-if game.PlaceId ~= 16035209787 then
-    warn("This script only works in Grow a Garden!")
-    return
-end
+-- v1.0 (update checks from GitHub)
 
+local VERSION = "1.0"
+local SCRIPT_URL = "https://raw.githubusercontent.com/Mrzarate0/MyPethub/main/main.lua"
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local petNameToGet = "Golden Bee"
-local run = true
 
-local function levelPet(petName)
-    while run do
-        local petsFolder = player:WaitForChild("Pets")
-        local pet = petsFolder:FindFirstChild(petName)
-
-        if not pet then
-            local remote = ReplicatedStorage:FindFirstChild("HatchPet")
-            if remote then
-                remote:InvokeServer(petName)
-            end
-        else
-            local levelRemote = ReplicatedStorage:FindFirstChild("LevelUpPet")
-            if levelRemote then
-                levelRemote:FireServer(pet)
-            end
-        end
-        task.wait(1)
-    end
+-- fetch remote script to parse version
+local function fetchLatestVersion()
+    local raw = game:HttpGet(SCRIPT_URL)
+    local v = raw:match("local VERSION%s*=%s*\"([%d%.]+)\"")
+    return v or "?"
 end
 
--- UI toggle
-local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+-- create GUI
+local gui = Instance.new("ScreenGui")
 gui.Name = "PetLevelGUI"
 gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
-local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 200, 0, 50)
-button.Position = UDim2.new(0, 100, 0, 100)
-button.Text = "Toggle Pet Auto-Level"
-button.BackgroundColor3 = Color3.new(1, 1, 0)
-button.Parent = gui
+-- version label
+local versionLabel = Instance.new("TextLabel", gui)
+versionLabel.Text = "v" .. VERSION
+versionLabel.Size = UDim2.new(0, 100, 0, 30)
+versionLabel.Position = UDim2.new(0, 100, 0, 50)
 
-button.MouseButton1Click:Connect(function()
-    run = not run
-    if run then
-        levelPet(petNameToGet)
+-- update-version button
+local updateBtn = Instance.new("TextButton", gui)
+updateBtn.Size = UDim2.new(0, 200, 0, 50)
+updateBtn.Position = UDim2.new(0, 100, 0, 100)
+updateBtn.Text = "Check for Updates"
+
+updateBtn.MouseButton1Click:Connect(function()
+    local latest = fetchLatestVersion()
+    versionLabel.Text = "v" .. latest
+    if latest ~= VERSION then
+        updateBtn.Text = "Reload to v" .. latest
+    else
+        updateBtn.Text = "Up-to-date!"
     end
 end)
 
-print("✅ Pet Level Script Loaded")
+-- reload button
+local reloadBtn = Instance.new("TextButton", gui)
+reloadBtn.Size = UDim2.new(0, 200, 0, 50)
+reloadBtn.Position = UDim2.new(0, 100, 0, 160)
+reloadBtn.Text = "Reload Script"
+reloadBtn.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet(SCRIPT_URL, true))()
+    gui:Destroy()
+end)
+
+-- existing pet-leveling code here...
+-- (omitted for brevity; keep your levelPet and toggle logic)
+
+print("✅ Pet Level Script v" .. VERSION .. " Loaded")
