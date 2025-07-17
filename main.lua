@@ -45,7 +45,7 @@ local function createButton(name, position, text, parent, callback)
 end
 
 -- Modify Egg Result
-createButton("ModEgg", UDim2.new(0, 100, 0, 60), "🔁 Modify Egg Result", gui, function()
+createButton("ModEgg", UDim2.new(0, 100, 0, 60), " Modify Egg Result", gui, function()
     local eggRemote = ReplicatedStorage:FindFirstChild("HatchPet")
     if eggRemote then
         eggRemote:InvokeServer("Golden Bee") -- Change the result to Golden Bee always
@@ -54,7 +54,7 @@ createButton("ModEgg", UDim2.new(0, 100, 0, 60), "🔁 Modify Egg Result", gui, 
 end)
 
 -- Change Pet Age & Weight
-createButton("ModPetStats", UDim2.new(0, 100, 0, 120), "🐣 Set Age/Weight", gui, function()
+createButton("ModPetStats", UDim2.new(0, 100, 0, 120), " Set Age/Weight", gui, function()
     local petFolder = player:WaitForChild("Pets")
     for _, pet in pairs(petFolder:GetChildren()) do
         if pet:FindFirstChild("Age") then pet.Age.Value = 9999 end
@@ -64,7 +64,7 @@ createButton("ModPetStats", UDim2.new(0, 100, 0, 120), "🐣 Set Age/Weight", gu
 end)
 
 -- Grow Plant/Fruit to 8000kg+
-createButton("GrowBig", UDim2.new(0, 100, 0, 180), "🌱 Grow Plant to 8000kg", gui, function()
+createButton("GrowBig", UDim2.new(0, 100, 0, 180), " Grow Plant to 8000kg", gui, function()
     local fruitFolder = player:FindFirstChild("Fruits")
     if fruitFolder then
         for _, fruit in pairs(fruitFolder:GetChildren()) do
@@ -76,4 +76,4 @@ createButton("GrowBig", UDim2.new(0, 100, 0, 180), "🌱 Grow Plant to 8000kg", 
     end
 end)
 
-print("✅ Grow a Garden Script v" .. VERSION .. " Loaded")
+print(" Grow a Garden Script v" .. VERSION .. " Loaded")
